@@ -3,8 +3,18 @@ const next = require('next')
 
 const app = next({ dev: process.env.NODE_ENV !== 'production' })
 const server = express()
+const handle = app.getRequestHandler()
 
 const PORT = process.env.PORT || 3000
+
+server.use(
+  '/_next/static/style.css',
+  express.static('./.next/static/style.css')
+)
+server.use(
+  '/_next/static/style.css.map',
+  express.static('./.next/static/style.css.map')
+)
 
 /*
 ===============================================================================
@@ -157,9 +167,9 @@ server.get('/rules', (req, res) => {
   return app.render(req, res, '/event/rules')
 })
 
-// Blanket everything else in a 404
+// Blanket everything else in a something
 server.get('*', (req, res) => {
-  return app.render404(req, res)
+  return handle(req, res)
 })
 
 app.prepare().then(() => {
